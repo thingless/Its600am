@@ -3,10 +3,16 @@
 <h3>
 Showing life at 2:30am in
 <select id="city-select">
+  <option value="saab">New York</option>
   <option value="volvo">San Francisco</option>
-  <option value="saab">Saab</option>
-  <option value="mercedes">Mercedes</option>
-  <option value="audi">Audi</option>
+  <option value="audi">Las Vegas</option>
+  <option value="audi">Boston</option>
+  <option value="audi">Los Angeles</option>
+  <option value="audi">Chicago</option>
+  <option value="audi">Nashville</option>
+  <option value="audi">Houston</option>
+  <option value="audi">Denver</option>
+  <option value="audi">Cincinnati</option>
 </select>
 <input class="form-control" type="range" min="0" max="24" step="0.5" ng-model="slider['contrast']" value="2.5">
 </h3>
