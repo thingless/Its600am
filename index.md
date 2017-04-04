@@ -1,5 +1,16 @@
 <div id="map">
 </div>
+<h3>
+Showing life at 2:30am in
+<select id="city-select">
+  <option value="volvo">San Francisco</option>
+  <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option>
+</select>
+<input class="form-control" type="range" min="0" max="24" step="0.5" ng-model="slider['contrast']" value="2.5">
+</h3>
+
 
 ## Welcome to GitHub Pages
 
