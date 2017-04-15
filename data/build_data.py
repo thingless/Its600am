@@ -23,15 +23,17 @@ def convert_period_to_abs_week_time(period):
     ]
 
 def get_locations_in_viewport(conn, viewport):
-    result = conn.query("""
-        SELECT row_to_json(r) FROM (
-            SELECT ST_AsGeoJSON(location)::json AS loc,
-                body->>'name' AS name,
-                body->'opening_hours'->'periods' AS periods
-            FROM results
-            WHERE has_details=TRUE AND location && ST_MakeEnvelope({left},{bottom},{right},{top},4326)
-        ) r;""".format(**viewport))
+    sql = """
+        SELECT ST_AsGeoJSON(location)::json AS loc,
+            body->>'name' AS name,
+            body->'opening_hours'->'periods' AS periods
+        FROM results
+        WHERE has_details=TRUE AND location && ST_MakeEnvelope({bottom},{left},{top},{right},4326)
+    """.format(**viewport)
+    print "running", sql
+    result = conn.query(sql)
     for loc, name, periods in result.getresult():
+        #print loc, name, periods, "\n"
         yield {"loc":loc,"name":name, "periods":periods}
 
 def filter_locations_by_open_time(locations, open_on_day, open_on_hour):
@@ -70,8 +72,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     viewport = get_location_viewport(args.gmapskey, args.location)
-    conn = pg.DB(host="localhost", user="postgres", passwd=None, dbname="polygon")
-    locations = list(get_locations_in_viewport(conn, viewport, args.day, args.time))
+    conn = pg.DB(dbname="polygon")
+    locations = list(get_locations_in_viewport(conn, viewport))
+    print "found {} locations in viewport".format(len(locations))
     conn.close()
     if args.day is not None and args.time is not None:
         locations = list(filter_locations_by_open_time(locations, args.day, args.time))
