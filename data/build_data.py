@@ -2,13 +2,13 @@
 import argparse
 import requests
 import pg
+import numpy
 from math import cos, asin, sqrt
 from nltk.cluster.kmeans import KMeansClusterer
 
 def get_location_viewport(gmapskey, location):
     res = requests.get('https://maps.googleapis.com/maps/api/place/textsearch/json?query={}&key={}'.format(location.replace(" ","+"), gmapskey)).json()
     res = res['results'][0]['geometry']['viewport']
-    #ST_MakeEnvelope(left, bottom, right, top, srid)
     return {
         "left":res['southwest']['lat'],
         "bottom":res['southwest']['lng'],
@@ -56,9 +56,11 @@ def latlng_distance(u, v):
     return 12742 * asin(sqrt(a))
 
 def do_kmeans(locations, number_of_clusters):
-    vectors = [numpy.array(l['loc']['geometry']['coordinates']) for l in locations]
+    for l in locations:
+        print l['loc']
+    vectors = [numpy.array(l['loc']['coordinates']) for l in locations]
     clusterer = KMeansClusterer(number_of_clusters, latlng_distance) #repeats=10
-    clusters = clusterer.cluster(vectors, assign_cluster=True, trace=True)
+    clusters = clusterer.cluster(vectors, True, trace=True)
     print 'As:', clusters
     print 'Means:', clusterer.means()
 
@@ -78,4 +80,4 @@ if __name__ == '__main__':
     conn.close()
     if args.day is not None and args.time is not None:
         locations = list(filter_locations_by_open_time(locations, args.day, args.time))
-
+    do_kmeans(locations, args.clusters)
