@@ -43,7 +43,11 @@ def filter_locations_by_open_time(locations, open_on_day, open_on_hour):
     time_of_interest += int(open_on_hour)/100*60 + int(open_on_hour)%100
     #we have a time we are interested in filter by it
     for location in locations:
-        periods = [convert_period_to_abs_week_time(d) for d in locations['periods']]
+        #print location['name'], location['periods']
+        period = (location.get('periods')or[{}])[0] or {}
+        if not period.get('open') or not period.get('close'):
+            continue
+        periods = [convert_period_to_abs_week_time(d) for d in location['periods']]
         periods = [p for p in periods if p[0]<=time_of_interest and p[1] >=time_of_interest]
         if not periods: continue
         yield location
@@ -56,8 +60,9 @@ def latlng_distance(u, v):
     return 12742 * asin(sqrt(a))
 
 def do_kmeans(locations, number_of_clusters):
+    number_of_clusters = min(number_of_clusters, len(locations))
     vectors = [numpy.array(l['loc']['coordinates']) for l in locations]
-    clusterer = KMeansClusterer(number_of_clusters, latlng_distance) #repeats=10
+    clusterer = KMeansClusterer(number_of_clusters, latlng_distance, avoid_empty_clusters=True) #repeats=10
     clusters = clusterer.cluster(vectors, True, trace=True)
     means = [m.tolist() for m in clusterer.means()]
     means = [[m[0],m[1],0] for m in means]
@@ -72,7 +77,7 @@ if __name__ == '__main__':
     parser.add_argument('--location', help='name of location to make heatmap of',required=True)
     parser.add_argument('--day', help='filters locations to only those open on specified day (0-6)',type=int)
     parser.add_argument('--time', help='filters locations to only those on the given hour (0000-2400)',type=int)
-    parser.add_argument('--clusters', help='The number of k-means clusters',type=int, default=100)
+    parser.add_argument('--clusters', help='The number of k-means clusters',type=int, default=500)
     args = parser.parse_args()
 
     viewport = get_location_viewport(args.gmapskey, args.location)
@@ -82,4 +87,5 @@ if __name__ == '__main__':
     conn.close()
     if args.day is not None and args.time is not None:
         locations = list(filter_locations_by_open_time(locations, args.day, args.time))
+    print "found {} locations during specified time and day".format(len(locations))
     do_kmeans(locations, args.clusters)
