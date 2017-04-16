@@ -8,7 +8,7 @@ from math import cos, asin, sqrt
 from nltk.cluster.kmeans import KMeansClusterer
 import logging
 import sys
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logging.basicConfig(format="%(asctime)-15s ::: %(message)s", stream=sys.stderr, level=logging.DEBUG)
 
 def get_location_viewport(gmapskey, location):
     res = requests.get('https://maps.googleapis.com/maps/api/place/textsearch/json?query={}&key={}'.format(location.replace(" ","+"), gmapskey)).json()
@@ -68,8 +68,8 @@ def do_kmeans(locations, number_of_clusters):
     number_of_clusters = min(number_of_clusters, len(locations))
     vectors = [numpy.array(l['loc']['coordinates']) for l in locations]
     clusterer = KMeansClusterer(number_of_clusters, latlng_distance, avoid_empty_clusters=True) #repeats=10
-    logger.info("starting k-means with {} clusters and {} data points".format(number_of_clusters, len(locations)))
-    clusters = clusterer.cluster(vectors, True, trace=True)
+    logging.info("starting k-means with {} clusters and {} data points".format(number_of_clusters, len(locations)))
+    clusters = clusterer.cluster(vectors, True, trace=False)
     means = [m.tolist() for m in clusterer.means()]
     means = [[m[0],m[1],0] for m in means]
     for c in clusters:
