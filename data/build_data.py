@@ -97,6 +97,8 @@ if __name__ == '__main__':
     print json.dumps({
         "kmeans":means,
         "time":day_and_time_to_week_time(args.day, args.time) if args.day is not None and args.time is not None else None,
+        "day":args.day,
+        "time":args.time,
         "viewport":viewport,
         "avgValue":numpy.mean([m[2] for m in means])
     })
