@@ -56,13 +56,15 @@ def latlng_distance(u, v):
     return 12742 * asin(sqrt(a))
 
 def do_kmeans(locations, number_of_clusters):
-    for l in locations:
-        print l['loc']
     vectors = [numpy.array(l['loc']['coordinates']) for l in locations]
     clusterer = KMeansClusterer(number_of_clusters, latlng_distance) #repeats=10
     clusters = clusterer.cluster(vectors, True, trace=True)
-    print 'As:', clusters
-    print 'Means:', clusterer.means()
+    means = [m.tolist() for m in clusterer.means()]
+    means = [[m[0],m[1],0] for m in means]
+    for c in clusters:
+      means[c][2] += 1
+    print means
+    return means
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='minifies location data with k-means')
@@ -70,7 +72,7 @@ if __name__ == '__main__':
     parser.add_argument('--location', help='name of location to make heatmap of',required=True)
     parser.add_argument('--day', help='filters locations to only those open on specified day (0-6)',type=int)
     parser.add_argument('--time', help='filters locations to only those on the given hour (0000-2400)',type=int)
-    parser.add_argument('--clusters', help='The number of k-means clusters',type=int, default=50)
+    parser.add_argument('--clusters', help='The number of k-means clusters',type=int, default=100)
     args = parser.parse_args()
 
     viewport = get_location_viewport(args.gmapskey, args.location)
