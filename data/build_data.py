@@ -68,7 +68,7 @@ def do_kmeans(locations, number_of_clusters):
     number_of_clusters = min(number_of_clusters, len(locations))
     vectors = [numpy.array(l['loc']['coordinates']) for l in locations]
     clusterer = KMeansClusterer(number_of_clusters, latlng_distance, avoid_empty_clusters=True) #repeats=10
-    logger.info("starting k-means with {} clusters and {} data points".format(number_of_clusters, len(locations)))
+    logging.info("starting k-means with {} clusters and {} data points".format(number_of_clusters, len(locations)))
     clusters = clusterer.cluster(vectors, True, trace=False)
     means = [m.tolist() for m in clusterer.means()]
     means = [[m[0],m[1],0] for m in means]
