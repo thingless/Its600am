@@ -95,7 +95,8 @@ if __name__ == '__main__':
     logging.info("found {} locations during specified time and day".format(len(locations)))
     means = do_kmeans(locations, args.clusters)
     print json.dumps({
-        "means":means,
+        "kmeans":means,
         "time":day_and_time_to_week_time(args.day, args.time) if args.day is not None and args.time is not None else None,
         "viewport":viewport,
+        "avgValue":numpy.mean([m[2] for m in means])
     })
