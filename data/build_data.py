@@ -3,8 +3,12 @@ import argparse
 import requests
 import pg
 import numpy
+import json
 from math import cos, asin, sqrt
 from nltk.cluster.kmeans import KMeansClusterer
+import logging
+import sys
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 def get_location_viewport(gmapskey, location):
     res = requests.get('https://maps.googleapis.com/maps/api/place/textsearch/json?query={}&key={}'.format(location.replace(" ","+"), gmapskey)).json()
@@ -16,10 +20,13 @@ def get_location_viewport(gmapskey, location):
         "top":res['northeast']['lng'],
     }
 
-def convert_period_to_abs_week_time(period):
+def day_and_time_to_week_time(day, time):
+    return (day or 0)*24*60 + int(time or 0)/100*60 + int(time or 0)%100
+
+def period_to_week_time(period):
     return [
-        period['open']['day']*24*60 + int(period['open']['time'])/100*60 + int(period['open']['time'])%100,
-        period['close']['day']*24*60 + int(period['close']['time'])/100*60 + int(period['close']['time'])%100
+        day_and_time_to_week_time(period['open']['day'], period['open']['time']),
+        day_and_time_to_week_time(period['open']['day'], period['close']['time']),
     ]
 
 def get_locations_in_viewport(conn, viewport):
@@ -30,7 +37,7 @@ def get_locations_in_viewport(conn, viewport):
         FROM results
         WHERE has_details=TRUE AND location && ST_MakeEnvelope({bottom},{left},{top},{right},4326)
     """.format(**viewport)
-    print "running", sql
+    logging.info("running" + sql)
     result = conn.query(sql)
     for loc, name, periods in result.getresult():
         #print loc, name, periods, "\n"
@@ -38,16 +45,14 @@ def get_locations_in_viewport(conn, viewport):
 
 def filter_locations_by_open_time(locations, open_on_day, open_on_hour):
     #First compute the time we want to filter by. Only locations that are open during this time will be returned
-    time_of_interest = None
-    time_of_interest = open_on_day*24*60
-    time_of_interest += int(open_on_hour)/100*60 + int(open_on_hour)%100
+    time_of_interest = day_and_time_to_week_time(open_on_day, open_on_hour)
     #we have a time we are interested in filter by it
     for location in locations:
         #print location['name'], location['periods']
         period = (location.get('periods')or[{}])[0] or {}
         if not period.get('open') or not period.get('close'):
             continue
-        periods = [convert_period_to_abs_week_time(d) for d in location['periods']]
+        periods = [period_to_week_time(d) for d in location['periods']]
         periods = [p for p in periods if p[0]<=time_of_interest and p[1] >=time_of_interest]
         if not periods: continue
         yield location
@@ -68,7 +73,6 @@ def do_kmeans(locations, number_of_clusters):
     means = [[m[0],m[1],0] for m in means]
     for c in clusters:
       means[c][2] += 1
-    print means
     return means
 
 if __name__ == '__main__':
@@ -83,9 +87,14 @@ if __name__ == '__main__':
     viewport = get_location_viewport(args.gmapskey, args.location)
     conn = pg.DB(dbname="polygon")
     locations = list(get_locations_in_viewport(conn, viewport))
-    print "found {} locations in viewport".format(len(locations))
+    logging.info("found {} locations in viewport".format(len(locations)))
     conn.close()
     if args.day is not None and args.time is not None:
         locations = list(filter_locations_by_open_time(locations, args.day, args.time))
-    print "found {} locations during specified time and day".format(len(locations))
-    do_kmeans(locations, args.clusters)
+    logging.info("found {} locations during specified time and day".format(len(locations)))
+    means = do_kmeans(locations, args.clusters)
+    print json.dumps({
+        "means":means,
+        "time":day_and_time_to_week_time(args.day, args.time) if args.day is not None and args.time is not None else None,
+        "viewport":viewport,
+    })
