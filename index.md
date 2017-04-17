@@ -3,9 +3,8 @@
 <h3>
 Showing life at <span id="time-text">2:30am</span> in
 <select id="city-select">
-  <option value="New York">New York</option>
   <option value="San Francisco">San Francisco</option>
-
+  <option value="New York">New York</option>
   <option value="audi">Las Vegas</option>
   <option value="audi">Boston</option>
   <option value="audi">Los Angeles</option>

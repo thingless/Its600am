@@ -57,9 +57,12 @@ class MapViewer {
   }
   _setHeatmapData(time){
     time = parseInt(time)
+    //var max = this.currentCityData
+    //  .map((d)=>d.avgValue)
+    //  .sort((a,b)=>b-a)[0];
     var max = this.currentCityData
-      .map((d)=>d.avgValue)
-      .sort((a,b)=>b-a)[0];
+      .find((d)=>d.time===time)
+      .avgValue
     var kmeans = this.currentCityData
       .find((d)=>d.time===time)
       .kmeans
