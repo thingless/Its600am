@@ -4,7 +4,7 @@ import requests
 import pg
 import numpy
 import json
-from math import cos, asin, sqrt
+from math import cos, asin, sqrt, floor
 from nltk.cluster.kmeans import KMeansClusterer
 import logging
 import sys
@@ -64,8 +64,8 @@ def latlng_distance(u, v):
     a = 0.5 - cos((lat2 - lat1) * p)/2 + cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2
     return 12742 * asin(sqrt(a))
 
-def do_kmeans(locations, number_of_clusters):
-    number_of_clusters = min(number_of_clusters, len(locations))
+def do_kmeans(locations):
+    number_of_clusters = len(locations)/4
     vectors = [numpy.array(l['loc']['coordinates']) for l in locations]
     clusterer = KMeansClusterer(number_of_clusters, latlng_distance, avoid_empty_clusters=True) #repeats=10
     logging.info("starting k-means with {} clusters and {} data points".format(number_of_clusters, len(locations)))
@@ -82,7 +82,6 @@ if __name__ == '__main__':
     parser.add_argument('--location', help='name of location to make heatmap of',required=True)
     parser.add_argument('--day', help='filters locations to only those open on specified day (0-6)',type=int)
     parser.add_argument('--time', help='filters locations to only those on the given hour (0000-2400)',type=int)
-    parser.add_argument('--clusters', help='The number of k-means clusters',type=int, default=500)
     args = parser.parse_args()
 
     viewport = get_location_viewport(args.gmapskey, args.location)
@@ -93,7 +92,7 @@ if __name__ == '__main__':
     if args.day is not None and args.time is not None:
         locations = list(filter_locations_by_open_time(locations, args.day, args.time))
     logging.info("found {} locations during specified time and day".format(len(locations)))
-    means = do_kmeans(locations, args.clusters)
+    means = do_kmeans(locations)
     print json.dumps({
         "kmeans":means,
         "day":args.day,
