@@ -1,10 +1,11 @@
 <div id="map">
 </div>
 <h3>
-Showing life at 2:30am in
+Showing life at <span id="time-text">2:30am</span> in
 <select id="city-select">
-  <option value="saab">New York</option>
-  <option value="volvo">San Francisco</option>
+  <option value="New York">New York</option>
+  <option value="San Francisco">San Francisco</option>
+
   <option value="audi">Las Vegas</option>
   <option value="audi">Boston</option>
   <option value="audi">Los Angeles</option>
@@ -12,9 +13,9 @@ Showing life at 2:30am in
   <option value="audi">Nashville</option>
   <option value="audi">Houston</option>
   <option value="audi">Denver</option>
-  <option value="audi">Cincinnati</option>
+  <option value="Cincinnati">Cincinnati</option>
 </select>
-<input class="form-control" type="range" min="0" max="24" step="0.5" ng-model="slider['contrast']" value="2.5">
+<input id="time-select" class="form-control" type="range" min="0" max="23.5" step="0.5" ng-model="slider['contrast']" value="2.5">
 </h3>
 
 
