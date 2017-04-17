@@ -91,7 +91,7 @@ if __name__ == '__main__':
     conn.close()
     if args.day is not None and args.time is not None:
         locations = list(filter_locations_by_open_time(locations, args.day, args.time))
-    logging.info("found {} locations during specified time and day".format(len(locations)))
+    logging.info("found {} locations during {}{}".format(len(locations), args.day, args.time))
     means = do_kmeans(locations)
     print json.dumps({
         "kmeans":means,
