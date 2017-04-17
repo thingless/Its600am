@@ -5,16 +5,16 @@ Showing life at <span id="time-text">2:30am</span> in
 <select id="city-select">
   <option value="San Francisco">San Francisco</option>
   <option value="New York">New York</option>
-  <option value="audi">Las Vegas</option>
-  <option value="audi">Boston</option>
-  <option value="audi">Los Angeles</option>
-  <option value="audi">Chicago</option>
-  <option value="audi">Nashville</option>
-  <option value="audi">Houston</option>
-  <option value="audi">Denver</option>
+  <option value="Las Vegas">Las Vegas</option>
+  <option value="Boston">Boston</option>
+  <option value="Los Angeles">Los Angeles</option>
+  <option value="Chicago">Chicago</option>
+  <option value="Nashville">Nashville</option>
+  <option value="Houston">Houston</option>
+  <option value="Denver">Denver</option>
   <option value="Cincinnati">Cincinnati</option>
 </select>
-<input id="time-select" class="form-control" type="range" min="5" max="23" step="0.5" ng-model="slider['contrast']" value="2.5">
+<input id="time-select" class="form-control" type="range" min="5" max="23" step="0.5" ng-model="slider['contrast']" value="6">
 </h3>
 
 

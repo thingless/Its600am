@@ -1,6 +1,6 @@
 theme: jekyll-theme-midnight
 gems: [jekyll-sitemap,jekyll-seo-tag]
-title: "Its230am: whats open in major cities around the US"
+title: "Its600am: whats open in major cities around the US"
 description: 'A time lapse of open restaurants, bars, cafes, etc in large cities around the US'
 url: 'http://its230am.com'
 author: thingless
