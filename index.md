@@ -19,7 +19,7 @@ Showing life at <span id="time-text">2:30am</span> in
 
 ## About
 
-The time lapse above allows you to see open restaurants, bars, cafes, etc in large cities around the US. Select a city from the dropdown and then adjust the time by moving the slider.
+The map above shows you open restaurants, bars, cafes, etc in large cities around the US. Select a city from the dropdown and then adjust the time by moving the slider.
 
 The location of restaurants and their hours of operation is based off of Google Maps data. The code for this site can be found on
 [GitHub](https://github.com/thingless/its600am/). The raw data is not aviablie due to Google's licensing.
