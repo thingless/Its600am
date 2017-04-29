@@ -75,22 +75,6 @@ class MapViewer {
   }
 }
 
-function setHeatmapData(jsonData, time){
-  time = parseInt(time)
-  var max = jsonData
-    .map((d)=>d.avgValue)
-    .sort((a,b)=>b-a)[0];
-  var kmeans = jsonData
-    .find((d)=>d.time===time)
-    .kmeans
-  var data = {
-    data: kmeans.map((e)=>{ return {lng:e[0], lat:e[1], value:[2]} }), //exp data point {lat: 24.6408, lng:46.7728, count: 3}
-    min: 1,
-    max: max,
-  }
-  heatmapLayer.setData(data);
-}
-
 $(document).ready(function(){
   window.viewer = new MapViewer('map');
 })

@@ -17,41 +17,9 @@ Showing life at <span id="time-text">2:30am</span> in
 <input id="time-select" class="form-control" type="range" min="5" max="23.5" step="0.5" ng-model="slider['contrast']" value="6">
 </h3>
 
+## About
 
-## Welcome to GitHub Pages
+The time lapse above allows you to see open restaurants, bars, cafes, etc in large cities around the US. Select a city from the dropdown and then adjust the time by moving the slider.
 
-You can use the [editor on GitHub](https://github.com/thingless/its230am/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/thingless/its230am/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+The location of restaurants and their hours of operation is based off of Google Maps data. The code for this site can be found on
+[GitHub](https://github.com/thingless/its600am/). The raw data is not aviablie due to Google's licensing.
