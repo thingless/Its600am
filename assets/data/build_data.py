@@ -81,8 +81,8 @@ def filter_locations_by_open_time(locations, open_on_day, open_on_hour):
 #     return means
 
 def do_jitter(locations, viewport):
-    jit_amount_lng = abs(viewport['left']-viewport['right'])*0.05
-    jit_amount_lat = abs(viewport['top']-viewport['bottom'])*0.05
+    jit_amount_lng = abs(viewport['left']-viewport['right'])*0.005
+    jit_amount_lat = abs(viewport['top']-viewport['bottom'])*0.005
     locations = [l['loc']['coordinates'] for l in locations]
     locations = [[
         l[0] + uniform(jit_amount_lng*0.1, jit_amount_lng),
