@@ -14,7 +14,7 @@ Showing life at <span id="time-text">2:30am</span> in
   <option value="Denver">Denver</option>
   <option value="Cincinnati">Cincinnati</option>
 </select>
-<input id="time-select" class="form-control" type="range" min="5" max="23" step="0.5" ng-model="slider['contrast']" value="6">
+<input id="time-select" class="form-control" type="range" min="5" max="23.5" step="0.5" ng-model="slider['contrast']" value="6">
 </h3>
 
 
